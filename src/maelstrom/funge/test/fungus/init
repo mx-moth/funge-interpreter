@@ -1,0 +1,39 @@
+                      8
+                      9
+                      +
+                      .
+                      @
+
+
+
+
+                      v
+                      $
+                      $
+                      $
+                      $
+                      $
+                      $
+                      $
+                      $
+                      $
+                      $   module name underline code:
+                      $   50g2+=adr of newline
+                      $   074*=current x     
+                      $   50g=no. of -'s to output
+                      $   174*=current module no.
+                      $                                                 v     v
+v                     <  ; vvv init code vvv ;        ; report ; >g1+20p>:#v_ v
+>10p 91+5* 40p140g00"seludom"i$$70p::20p50p60p40g30pv ; write >; ^02pg03g02<  $
+20g60g`#v_     v  v"Fungus Funge-98 diagnostics"+190< ; & loop ;              >
+xxxxxxxx>20g60pv  >:#,_$  0174*p>91+50g2+174*g40g+p50g3+074*pv ; < underline  ;
+                       v-g05-+3g 05:+1g*470p+g04g*471g*470"-"< ; module names ;
+                  p*470_91+\174* g40g+p174*g1+:174*p70g-!  v ^                
+                                ^       vp06p05p02::+4+:g05_
+                ; vvv next mod code ;     ; vvv report save code vvv ;
+"peR">:#,_@    >50g20p30g1+:30p40g70g+-#v_60g70g140g10"troper"#vo0"KO devas tro"
+v"P"+1g*470pg*471g*470" "<p*4710p*470+88<                      >99+.@
+>%:074*p!#v_             ^   < ; <- clear space ;            v   p*470+1g*470<
+          >174*g1+55*%:174*p#^_0" eludom gnidaoL">:#,_$1074*p>074*g30gg:," "-|
+v                         p*64*6+76p*64*89:"v"$$$$iv#$_v#!p*470::-1g*470<,+19<
+                                            @.+9+91<   >30gg            ^

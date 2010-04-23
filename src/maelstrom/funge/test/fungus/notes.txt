@@ -1,0 +1,259 @@
+assume:
+* unlimited size (or at least big enough for stubs & module)
+
+can check basics in 1st prog, then load extra modules in as needed to keep size small
+1st prog should only check bare minimum needed to start off the program - i.e. it's better to report problems in the report file than as an error code
+
+produce:
+* report file - may be long, so may need large fungespace? or compressed report which can be read by other prog & output on stdout?
+
+check stuff by y or by reflections?
+have two different startup scripts - one y-wise, one instr-wise
+both perform same checks but in different orders
+
+fungy: check y-wise
+1. check not unefunge
+2. check not trefunge
+3. check IO flags in y
+4. instr checks: #2
+5. go to init loader
+
+fungi: check i-wise
+1. check not unefunge
+2. check not trefunge
+3. y checks: #1,2 & 3
+4. go to init loader
+
+init loader:
+1. check stack empty
+2. check get/put to ensure befunge
+3. load init code & check file loading does an overlay
+
+init code:
+1. load module list
+2. set variables
+3. print message
+4. underline module names
+5. start main cycle
+
+main cycle:
+1. clear module space
+2. load module
+3. enter module
+4. update vars & loop if needed
+5. save report file & exit
+
+main/module format:
+* modules are 80x25
+* cells 10 to f0 are left empty for variables
+* so 00 must be a dir. change control
+* exit code:
+    > >:#,_ @
+  in bottom right corner.
+  72,24 can be filled with 'v' to go to report file output code
+  78,24 can be filled with 'v' to go to next module code
+  so individual modules can be loaded and run - output will be on stdout
+  or modules can be loaded over stub code, allowing output to be via stdout or report file
+* number output code (since output must be generated on stack):
+  positive integers:
+    > >:91+%"0"+\91+/:#v_$
+      ^                <
+  or f98:
+    > >:a%'0+\a/:#v_$
+      ^           <
+  pos/neg integers:
+    > :0\`#v_ [pos code]       >
+           >01-* [pos code] "-"^
+* variables:
+  10=0 if in fungus
+  20=x of report file line
+  30=y of report file line
+  40=y start of report/module list
+  50=x of report line start/width of module list
+  60=max pos/width of report
+  70=no. of modules
+  074* to 774* are temp for loader code
+* stub report/exit code:
+       >v>:#,_v@
+ >g1+20p>:#v_ v
+ ^02pg03g02<  $
+* modules can use #vz to check for f98
+
+Modules:
+--------
+
+Finished/almost finished modules:
+
+* fspace - Check fungespace configuration
+  - try negative addresses to see if unlimited size (test g,p)
+  - ** check get reflection **
+  - compute cell size & sign
+  - ask y for cell size
+  - compute stack cell size
+* b93 - test simple befunge93 instruction
+  - Check ! does logical negation
+  - Check edge jumps work
+  - Check $ works
+  - Check 0-9 work
+  - Check :
+  - Check `
+* string - Check stringmode works
+  - Dir change disabled
+  - Non-ASCII works
+  - SGML spaces
+  - ** check @ works **
+* math - Check maths
+  - %,/ signs
+* f98 - Check funge98 instructions
+  - Check ' works. try wrapping?
+  - Check a-f
+  - Check k:
+    4321k$
+    "v^"1ksv
+    3210k$
+    ** check "^"xy"v"xy1kp (where xy are the coordinates of the p) **
+  - n vs y?
+  - s
+  - z
+* f98space - Check funge98 dir/space related instrs
+  - Check ; gets skipped - dir changes, quotes, etc.
+  - Check []
+  - r
+  - w
+  - x
+  - Check j - neg,0,pos
+  - ** check 0 gobbling? **
+  - ** fix j and x for if stack left untouched **
+* concur - Check concurrency stuff
+  - @ kills IP, not prog?
+  - q kills prog?
+  - t vs y
+  - IP ids
+  - z is 1 tick, space 0 ticks
+  - ** check ; is 0 ticks **
+  - k is 1 tick
+* sem - Check funge98 semantics
+  - A-Z reflect
+  - ** check ( works if no name given? **
+  - ** check ) reflects if none loaded? **
+  - NULL and ROMA overlay stuff
+* stackstack - Check stackstack instrs
+  - u transfers in correct dirs. & orders
+  - { - offset changes, whether stacks created, etc.
+  - } - offset changes, whether stacks created, etc.
+  - ** Note that this module will abort if } fails, but not if u fails. In particular, it will not abort if u *and* } fail. Rewrites welcome! **
+* HRTI
+  - Check instructions work
+  - Provide simple benchmark
+
+Unwritten modules:
+
+* IO - check input & output
+  - Check & only gets integer chars, not negative, etc.
+  - Check ~ accepts plain return
+  - Check buffering via y
+  - Check , works OK?
+  - Check . outputs pos & neg, with space, etc.
+* b93space - Check befunge93 dir/space related instrs?
+  - Check ^v<>?
+  - Check _|
+* exec - Check funge98 execution?
+  - = try running something..?
+* trefunge - Check trefunge instructions
+  - h,l,m dirs
+  - loading of trefunge space into befunge prog
+* file - Check file IO
+  - control codes loaded & saved
+  - compression & stuff
+  - overlays
+  - EOF newlines
+  - trefunge into befunge
+* y - report results of Y query
+  - if full thing implemented (check for handprint)
+  - output contents
+fingerprint testers:
+- only test implemented instructions to make life easier:
+* NULL
+  - ensure all reflect. doesn't guarantee it did anything though...
+  - is this needed, since the sem module does checks along these lines?
+* ROMA
+  - ensure numbers work
+* MODE
+  - Check instructions work
+  - Trefunge hovermode?
+  - TOYS hovermode?
+  - Invertmode/queuemode stackstack?
+  - Stack peeks?
+  - Iterated switchmode?
+* MODU
+  - Check results have correct signs & values - use built-in table?
+* ORTH
+  - Check instructions work
+* PERL
+  - Check instructions work
+  - Try simple perl operations
+* REFC
+  - Check instructions work
+  - What if D doesn't recognise?
+  - What if S fed the same one twice?
+* TOYS
+  - Check instructions work
+  - A: 'n'<=0 ?
+  - CKMVS: Parameter order? size vectors <= 0?
+  - F: Get j from stack?
+       i <= 0?
+  - G: Does what?
+  - H: Arithmetic or logical shifts?
+  - J,O: Trefunge does plane or line?
+         Space left filled with spaces?
+  - T: Funny dimension numbers?
+* TURT
+  - Check instructions work
+  - Find which directions left & right are
+  - Check initial setup
+
+Errors:
+0 - Can't run in unefunge
+    Unefunge has been detected by 'v' causing a reflection. Fungus isn't designed to run in unefunge, so change to befunge and try again. Also your interpreter discards data on extra dimensions.
+1 - Can't run in trefunge
+    Trefunge has been detected by 'l' being executed. Fungus isn't designed to run in trefunge, so change to befunge and try again.
+2 - 'v' failure
+    The 'v' instruction has been passed over. This either indicates a non-compliant unefunge interpreter (i.e. an unimplemented instruction has been skipped and not caused a reflection), the file has been incorrectly loaded, or execution hasn't started at the initial instruction.
+3 - 'l' failure
+    The 'l' instruction has been passed over. This indicates a non-compliant befunge interpreter (i.e. an unimplemented instruction has been skipped and not caused a reflection).
+4 - Load failure
+    While trying to load a befunge/trefunge file into unefunge/befunge space, the extra lines/layers have been overlayed over existing code, instead of being discarded or appended to the end
+5 - Can't run in unefunge
+    Unefunge has been detected by 'v' causing a reflection. Fungus isn't designed to run in unefunge, so change to befunge and try again.
+6 - '7y' reflected
+    The 'y' instruction has caused a reflection, suggesting it is unimplemented.
+    Sub-code A:
+       The 7 has been removed from the stack, suggesting that only part of the y instruction has been implemented
+    Sub-code B:
+       The 7 has not been removed from the stack, so it is either 7-dimension fungespace or y is not implemented at all
+7 - Not befunge
+    The 7y instruction has revealed that it is not befunge. The sub-code displays how many dimensions 7y suggests there are.
+8 - No 'i'
+    The y instruction has suggested that file input is not available
+9 - '1y' reflected
+    The 1y sequence has been reflected, suggesting that querying the misc. flags is not supported.
+10 - No 'o'
+     The y instruction has suggested that file output is not available 
+11 - Stack not empty
+     This suggests that the y instruction has been leaving behind extra information
+12 - Get/put failure
+     Writing and then reading cell 0,0 suggests that fungespace access is broken or it is not befunge
+13 - Put reflection
+     A put instruction caused a reflection, suggesting fungespace writing is broken
+14 - Get reflection
+     A get instruction caused a reflection, suggesting fungespace reading is broken
+15 - Load overlay failure
+     The load command did not load the specified file correctly, or failed to return an error if the file was not found
+16 - Load error
+     An error was returned when attempting to load the 'init' file. Make sure the file is available.
+17 - Fungespace Y too small
+     The fungespace you are using is too small in the Y direction. Make it larger, preferably switching to unlimited size
+18 - Report save failure
+     Fungus was unable to save the report file
+19 - Module load failure
+     Unable to load the last module named on screen

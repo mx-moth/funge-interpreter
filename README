@@ -1,0 +1,12 @@
+Befunge IDE and interperator
+============================
+
+Compiling
+---------
+
+	javac -d bin/ -cp src/ $( find src/ -name '*.java' )
+
+Running
+-------
+
+	java -cp bin/ maelstrom.funge.gui.FungeGui
