@@ -158,28 +158,6 @@ public class FungeGui implements ActionListener, ChangeListener, RunStateChangeL
 		}
 	}
 
-	/**
-	 * Adds a component to the container using the supplied GridBagLayout settings
-	 * @param cont
-	 * @param comp
-	 * @param gridx
-	 * @param gridy
-	 * @param gridwidth
-	 * @param gridheight
-	 * @param weightx
-	 * @param weighty
-	 * @param anchor
-	 * @param fill
-	 * @param insets
-	 * @param ipadx
-	 * @param ipady
-	 */
-	public void addGridBagComponent(Container cont, Component comp, int gridx, int gridy, int gridwidth, int gridheight, double weightx, double weighty, int anchor, int fill, Insets insets,
-	        int ipadx, int ipady) {
-		GridBagConstraints c = new GridBagConstraints(gridx, gridy, gridwidth, gridheight, weightx, weighty, anchor, fill, insets, ipadx, ipady);
-		cont.add(comp, c);
-	}
-
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == start) {
