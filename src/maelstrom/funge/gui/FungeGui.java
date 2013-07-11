@@ -16,20 +16,20 @@ public class FungeGui implements ActionListener, ChangeListener, RunStateChangeL
 	private static boolean updating = false;
 
 
-	private JFrame         window;
-	private GridEditor     gridEditor;
-	private StatusBar      status;
-	private StackDisplay   stackDisplay;
+	private JFrame window;
+	private GridEditor gridEditor;
+	private StatusBar status;
+	private StackTableModel stackTableModel;
 
-	private JButton        start;
-	private JButton        stop;
-	private JButton        step;
-	private JToggleButton  pause;
-	private JToggleButton  fullSpeed;
-	private JSlider        speed;
+	private JButton start;
+	private JButton stop;
+	private JButton step;
+	private JToggleButton pause;
+	private JToggleButton fullSpeed;
+	private JSlider speed;
 
-	private Grid           cleanGrid;
-	private Funge          funge;
+	private Grid cleanGrid;
+	private Funge funge;
 
 	public static void main(String[] args) {
 
@@ -62,11 +62,31 @@ public class FungeGui implements ActionListener, ChangeListener, RunStateChangeL
 		status.setPointer(gridEditor.getPointer());
 
 		// And the stack display
-		stackDisplay = new StackDisplay();
-		scroll = new JScrollPane(stackDisplay);
-		window.add(scroll, BorderLayout.EAST);
+		this.stackTableModel = new StackTableModel();
+		JScrollPane tableScroll = new JScrollPane(this.stackTableModel.createTableForModel());
+		tableScroll.setMinimumSize(new Dimension(150, 0));
+		tableScroll.setPreferredSize(new Dimension(200, 50));
+
+		window.add(tableScroll, BorderLayout.EAST);
 
 		// And the control bar up top
+		Container buttonPanel = this.makeButtonPanel();
+		window.add(buttonPanel, BorderLayout.NORTH);
+
+		setUpdating(true);
+		toggleButtons(true);
+
+		// Show the window
+		window.pack();
+		window.setVisible(true);
+
+		gridEditor.requestFocusInWindow();
+	}
+
+	/**
+	 * Make the button panel that runs along the top of the window.
+	 */
+	private Container makeButtonPanel() {
 		Container buttonPanel = new Container();
 		buttonPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
@@ -74,7 +94,7 @@ public class FungeGui implements ActionListener, ChangeListener, RunStateChangeL
 		stop = new JButton(createIconButton("image/stop_red.png"));
 		pause = new JToggleButton(createIconButton("image/pause_green.png"));
 		step = new JButton(createIconButton("image/next_green.png"));
-		speed = new JSlider(0, 1000, 100);
+		speed = new JSlider(1, 1000, 750);
 		fullSpeed = new JToggleButton(createIconButton("image/forward_green.png"));
 
 		buttonPanel.add(start);
@@ -97,18 +117,14 @@ public class FungeGui implements ActionListener, ChangeListener, RunStateChangeL
 		step.addActionListener(this);;
 		speed.addChangeListener(this);
 		fullSpeed.addActionListener(this);
-		setUpdating(true);
 
-		window.add(buttonPanel, BorderLayout.NORTH);
+		start.setToolTipText("Start");
+		stop.setToolTipText("Stop");
+		pause.setToolTipText("Pause");
+		step.setToolTipText("Step");
+		fullSpeed.setToolTipText("Full speed");
 
-		toggleButtons(true);
-
-
-		// Show the window
-		window.pack();
-		window.setVisible(true);
-
-		gridEditor.requestFocusInWindow();
+		return buttonPanel;
 	}
 
 	/**
