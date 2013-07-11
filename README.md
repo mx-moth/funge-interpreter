@@ -19,15 +19,15 @@ Running
 Compliance to the spec
 ----------------------
 
-This implements most of the basic [Funge-98 spec][f98-s]. It is missing the
+This implements most of the basic [Funge-98 spec][f98-spec]. It is missing the
 following Funge-98 features:
 
 * Filesystem Funge
 * Concurrent Funge
 * Other dimensional funges (Unefunge, Trefunge, N-Funge)
-* Load and unload semantics `(`/`)`
-* System info operator `y`
-* Stack stack manipulation `{`, `}`, `u`
+* Load and unload semantics: `(`, `)`
+* System info operator: `y`
+* Stack stack manipulation: `{`, `}`, `u`
 
 Funge-98 is a superset of the [Befunge-93 spec][b93-spec], so Befunge-93
 programs should work with one notable exception: Values are not limited to
