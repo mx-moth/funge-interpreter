@@ -199,7 +199,9 @@ public class FungeGui implements ActionListener, ChangeListener, RunStateChangeL
     public void stateChanged(ChangeEvent e) {
 	    if (e.getSource() == speed) {
 	    	if (funge != null) {
-	    		funge.setSleepTime(speed.getValue());
+				double value = 1 - (double)speed.getValue() / speed.getMaximum();
+				double frequency = value * value;
+	    		funge.setSleepTime((int)(frequency * 5000));
 	    	}
 	    }
     }
