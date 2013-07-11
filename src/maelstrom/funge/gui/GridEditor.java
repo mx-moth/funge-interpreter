@@ -5,6 +5,7 @@ import java.awt.event.*;
 import java.util.Stack;
 
 import javax.swing.JViewport;
+import javax.swing.JScrollPane;
 
 import maelstrom.funge.interpreter.*;
 import maelstrom.funge.event.*;
@@ -46,12 +47,18 @@ public class GridEditor extends Container implements KeyListener, MouseListener,
 		this.requestFocus();
 	}
 
+	public JScrollPane createScrollPaneForEditor() {
+		JScrollPane gridScroll = new JScrollPane(this);
+		gridScroll.setRowHeader(new GridHeader(this, GridHeader.VERTICAL).createViewportForHeader());
+		gridScroll.setColumnHeader(new GridHeader(this, GridHeader.HORIZONTAL).createViewportForHeader());
+		return gridScroll;
+	}
+
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
 
 		Rectangle bounds = g.getClipBounds();
-
 
 		boolean equal = bounds.equals(oldBounds);
 		oldBounds = bounds;
@@ -67,8 +74,8 @@ public class GridEditor extends Container implements KeyListener, MouseListener,
 			// Calculate the bounds of the grid we are looking at
 			int startX = bounds.x / cell.width;
 			int startY = bounds.y / cell.height;
-			int endX = Math.min((bounds.x + bounds.width) / cell.width + 1, size.width);
-			int endY = Math.min((bounds.y + bounds.height) / cell.height + 1, size.height);
+			int endX = Math.min((bounds.x + bounds.width) / cell.width, size.width);
+			int endY = Math.min((bounds.y + bounds.height) / cell.height, size.height);
 
 			// Draw all the squares
 			gBack.setFont(new Font("SansSerif", 0, 14));
@@ -79,39 +86,21 @@ public class GridEditor extends Container implements KeyListener, MouseListener,
 				}
 			}
 
-			int barEndX = Math.min(bounds.x + bounds.width, (size.width + 1) * cell.width);
-			int barEndY = Math.min(bounds.y + bounds.height, (size.height + 1) * cell.height);
-
-			// Draw the header bars
-			gBack.setFont(new Font("SansSerif", 0, 10));
-			gBack.setColor(Color.GRAY);
-			gBack.fillRect(bounds.x, bounds.y, barEndX - bounds.x, cell.height);
-			gBack.fillRect(bounds.x, bounds.y, cell.width, barEndY - bounds.y);
+			int barEndX = Math.min(bounds.x + bounds.width, (size.width) * cell.width);
+			int barEndY = Math.min(bounds.y + bounds.height, (size.height) * cell.height);
 
 			// Draw the grid lines
 			for (int x = startX; x < endX + 1; x++) {
-				gBack.drawLine((x + 1) * cell.width, bounds.y, (x + 1) * cell.width, barEndY);
+				gBack.drawLine((x) * cell.width, bounds.y, (x) * cell.width, barEndY);
 			}
 			for (int y = startY; y < endY + 1; y++) {
-				gBack.drawLine(bounds.x, (y + 1) * cell.height, barEndX, (y + 1) * cell.height);
+				gBack.drawLine(bounds.x, (y) * cell.height, barEndX, (y) * cell.height);
 			}
-
-			// Draw the header text
-			gBack.setColor(Color.white);
-			for (int x = startX; x < endX; x++) {
-				gBack.drawString("" + x, (x + 1) * cell.width + 2, bounds.y + cell.height - 5);
-			}
-			for (int y = startY; y < endY; y++) {
-				gBack.drawString("" + y, bounds.x + 2, (y + 2) * cell.height - 5);
-			}
-
-			// Fill the top left square white, to blank out any headers in it
-			gBack.fillRect(bounds.x, bounds.y, cell.width, cell.height);
 		}
 
 		// Get and set up the graphics object for the image
 		Graphics gBack = backBuffer.getGraphics();
-		gBack.setClip(cell.width, cell.height, bounds.width - cell.width, bounds.height - cell.height);
+		gBack.setClip(0, 0, bounds.width - cell.width, bounds.height - cell.height);
 		gBack.translate(-bounds.x, -bounds.y);
 		gBack.setFont(new Font("SansSerif", 0, 14));
 
@@ -168,14 +157,13 @@ public class GridEditor extends Container implements KeyListener, MouseListener,
 	 *        The y coordinate of the grid square.
 	 */
 	public void drawSquare(Graphics g, Color back, int x, int y) {
-
 		g.setColor(back);
-		g.fillRect((x + 1) * cell.width + 1, (y + 1) * cell.height + 1, cell.width - 1, cell.height - 1);
+		g.fillRect(x * cell.width + 1, y * cell.height + 1, cell.width - 1, cell.height - 1);
 
 		g.setColor(Color.BLACK);
 		String text = "" + (char) (grid.get(x, y));
 		int textOffset = (cell.width - g.getFontMetrics().stringWidth(text)) >> 1;
-		g.drawString(text, (x + 1) * cell.width + textOffset, (y + 2) * cell.height - 3);
+		g.drawString(text, (x) * cell.width + textOffset, (y + 1) * cell.height - 3);
 	}
 
 	public void repaintAll() {
@@ -186,11 +174,11 @@ public class GridEditor extends Container implements KeyListener, MouseListener,
 
 	@Override
 	public Dimension getPreferredSize() {
-		return new Dimension((size.width + 2) * cell.width, (size.height + 2) * cell.height);
+		return new Dimension((size.width + 1) * cell.width, (size.height + 1) * cell.height);
 	}
 	@Override
 	public Dimension getMinimumSize() {
-		return new Dimension((size.width + 1) * cell.width, (size.height + 1) * cell.height);
+		return new Dimension((size.width) * cell.width, (size.height) * cell.height);
 	}
 
 
@@ -345,8 +333,8 @@ public class GridEditor extends Container implements KeyListener, MouseListener,
 		if (this.isEnabled()) {
 			this.requestFocus();
 
-			int x = e.getX() / cell.width - 1;
-			int y = e.getY() / cell.height - 1;
+			int x = e.getX() / cell.width;
+			int y = e.getY() / cell.height;
 
 			// We cant just assign them both to the same vector, as
 			// pointer.setPosition() performs some bounding checks
@@ -358,8 +346,8 @@ public class GridEditor extends Container implements KeyListener, MouseListener,
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		if (isEnabled()) {
-			int x = e.getX() / cell.width - 1;
-			int y = e.getY() / cell.height - 1;
+			int x = e.getX() / cell.width;
+			int y = e.getY() / cell.height;
 
 			pointer.setPosition(new Vector(x, y));
 		}
@@ -391,8 +379,8 @@ public class GridEditor extends Container implements KeyListener, MouseListener,
 
 			int x = (pos.getX() - AUTOSCROLL_EXTRA) * cell.width - view.x;
 			int y = (pos.getY() - AUTOSCROLL_EXTRA) * cell.height - view.y;
-			int width = cell.width * (AUTOSCROLL_EXTRA + 1) * 2;
-			int height = cell.height * (AUTOSCROLL_EXTRA + 1) * 2;
+			int width = cell.width * (AUTOSCROLL_EXTRA) * 2;
+			int height = cell.height * (AUTOSCROLL_EXTRA) * 2;
 
 			Rectangle rect = new Rectangle(x, y, width, height);
 			scroll.scrollRectToVisible(rect);

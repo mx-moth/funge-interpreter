@@ -50,11 +50,7 @@ public class FungeGui implements ActionListener, ChangeListener, RunStateChangeL
 
 		// Make and place the grid editor
 		gridEditor = new GridEditor(new Dimension(80, 25));
-		JScrollPane scroll = new JScrollPane(gridEditor);
-		JViewport viewport = new JViewport();
-		viewport.add(new JLabel("Testing viewport thingy"));
-		scroll.setColumnHeader(viewport);
-		window.add(scroll, BorderLayout.CENTER);
+		window.add(this.gridEditor.createScrollPaneForEditor(), BorderLayout.CENTER);
 
 		// And the status bar
 		status = new StatusBar();
