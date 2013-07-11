@@ -261,6 +261,8 @@ public class GridEditor extends Container implements KeyListener, MouseListener,
 					for (int i = 0; i < GridEditor.CTRL_JUMP_SIZE; i++) {
 						pointer.move();
 					}
+				} else if ((e.getModifiersEx() & KeyEvent.ALT_DOWN_MASK) != 0) {
+					// alt+dir just changes the pointer direction, so do nothing.
 				} else {
 					pointer.move();
 				}
