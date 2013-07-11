@@ -36,6 +36,9 @@ public class FungeGui implements ActionListener, ChangeListener, RunStateChangeL
 		SwingUtilities.invokeLater(new Runnable() {
 
 			public void run() {
+				System.setProperty("awt.useSystemAAFontSettings","on");
+				System.setProperty("swing.aatext", "true");
+
 				new FungeGui();
 			}
 		});
