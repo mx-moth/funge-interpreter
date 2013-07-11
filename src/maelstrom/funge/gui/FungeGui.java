@@ -260,6 +260,7 @@ public class FungeGui implements ActionListener, ChangeListener, RunStateChangeL
 		funge.getGrid().addGridChangeListener(gridEditor);
 		funge.getPointer().addPointerChangeListener(gridEditor);
 		funge.setSleepTime(speed.getValue());
+		funge.setFullSpeed(fullSpeed.isSelected());
 		funge.addRunStateChangeListener(this);
 
 		Pointer pointer = funge.getPointer();
@@ -267,7 +268,8 @@ public class FungeGui implements ActionListener, ChangeListener, RunStateChangeL
 		gridEditor.setPointer(pointer);
 
 		Stack stack = funge.getStack();
-		stack.addStackChangeListener(stackDisplay);
+		stack.addStackChangeListener(stackTableModel);
+		stackTableModel.clear();
 
 		System.out.println(" ** Starting Funge **");
 
