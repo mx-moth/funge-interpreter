@@ -31,17 +31,21 @@ public class GridEditor extends Container implements KeyListener, MouseListener,
 	private Image         backBuffer;
 
 	public GridEditor(Dimension size) {
-		this.size = new Dimension(size);
-		cell = new Dimension(16, 16);
-		pointer = new Pointer(this.size);
+		this(new Grid(size));
+	}
 
-		grid = new Grid(new Dimension(this.size.width, this.size.height));
+	public GridEditor(Grid grid) {
+		this.size = grid.getSize();
+		this.cell = new Dimension(16, 18);
+		this.pointer = new Pointer(this.size);
 
-		addKeyListener(this);
-		addMouseListener(this);
-		addMouseMotionListener(this);
-		grid.addGridChangeListener(this);
-		pointer.addPointerChangeListener(this);
+		this.grid = grid;
+
+		this.addKeyListener(this);
+		this.addMouseListener(this);
+		this.addMouseMotionListener(this);
+		this.grid.addGridChangeListener(this);
+		this.pointer.addPointerChangeListener(this);
 
 		this.setBackground(Color.WHITE);
 		this.requestFocus();

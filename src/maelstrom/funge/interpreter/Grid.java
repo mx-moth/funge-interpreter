@@ -42,6 +42,33 @@ public class Grid {
 		size = new Dimension(grid[0].length, grid.length);
 	}
 
+	public static Grid fromString(String string) {
+		String[] lines = string.split("\n");
+
+		int height = lines.length;
+		int width = 0;
+		for (String s : lines) {
+			if (width < s.length()) width = s.length();
+		}
+
+		return Grid.fromString(string, new Dimension(width, height));
+	}
+
+	public static Grid fromString(String string, Dimension size) {
+		String[] lines = string.split("\n");
+
+		Grid grid = new Grid(size);
+		for (int y = 0; y < lines.length; y++) {
+			String line = lines[y];
+			for (int x = 0; x < line.length(); x++) {
+				char character = line.charAt(x);
+				grid.set(x, y, character);
+			}
+		}
+
+		return grid;
+	}
+
 	/**
 	 * Initialise the grid using the supplied sizes
 	 *

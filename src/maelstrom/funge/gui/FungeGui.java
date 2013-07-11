@@ -52,7 +52,20 @@ public class FungeGui implements ActionListener, ChangeListener, RunStateChangeL
 		window.setLayout(new BorderLayout());
 
 		// Make and place the grid editor
-		gridEditor = new GridEditor(new Dimension(80, 25));
+		Grid grid = Grid.fromString(
+			">               v\n" +
+			"v\"Hello, World!\"< \" Put Hello World string on stack, backwards\n"+
+			">:#,_$v           \" Print the string out\n" +
+			"v ,+19<           \" Print new line\n" +
+			"\n" +
+			">0 1 \\:. 91+, \\:. 91+,v\n" +
+			"   v                  <\n" +
+			"   >:09pv  \" Store top number\n" +
+			"    v.:+<  \" Add two numbers, print result\n" +
+			"    >19+,v \" Print new line\n" +
+			"   ^\\g90 < \" Load from storage",
+			new Dimension(80, 26));
+		this.gridEditor = new GridEditor(grid);
 		window.add(this.gridEditor.createScrollPaneForEditor(), BorderLayout.CENTER);
 
 		// And the status bar
