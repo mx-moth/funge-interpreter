@@ -82,7 +82,7 @@ public class Operators {
 			operators.put((long) (i + 'a'), new NumberOperator(10 + i));
 		}
 		// The stack operators
-		operators.put((long) '', new StackOperator.Pop());
+		operators.put((long) '$', new StackOperator.Pop());
 		operators.put((long) ':', new StackOperator.Clone());
 		operators.put((long) '\\', new StackOperator.Swap());
 		operators.put((long) 'n', new StackOperator.Empty());
